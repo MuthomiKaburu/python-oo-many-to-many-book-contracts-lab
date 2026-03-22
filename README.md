@@ -1,116 +1,143 @@
-# Many-to-many Object Relationships Lab
+# 📚 Many-to-Many Relationships Lab: Book Contracts
 
-Now that we have learned about several types of relationships it's time to build 
-one of our own. In this lab you will be creating a many-to many relationship in 
-python 
+## 🧾 Overview
 
-## The Scenario 
+This project demonstrates how to implement a **many-to-many relationship** in Python using object-oriented programming (OOP).
 
-We are tasked with building a model to aid in building contracts for books with 
-multiple authors. As a part of this model we need to create an Author model, a Book 
-model and a Contract model. Authors can have many books through contracts, and books 
-can have many authors through contacts.
+The system models relationships between:
 
-## Tools & Resources 
-- [Github Repo](https://github.com/learn-co-curriculum/python-oo-many-to-many-book-contracts-lab)
-- [Python classes](https://docs.python.org/3/tutorial/classes.html)
+* **Authors**
+* **Books**
+* **Contracts** (intermediary)
 
-## Instructions
+An author can have multiple books, and a book can have multiple authors. This relationship is managed through the **Contract** class, which also stores additional data such as contract date and royalties.
 
-### Task 1: Define the Problem
+---
 
-Build a model a many to many relationship between Books and Authors:
+## 🎯 Objectives
 
-* Build Book class
-* Build Author class
-* Build Contract class
-* Build connecting methods between all
+* Understand and implement many-to-many relationships
+* Use an intermediary class to connect models
+* Practice Python OOP concepts:
 
-### Task 2: Determine the Design
+  * Classes and instances
+  * Class attributes
+  * Instance methods
+  * Properties and validation
+* Build a structured and scalable model
 
-#### Book:
-* Attributes:
-  * title (string)
-  * all (array) 
-* Methods:
-  * contracts()
-  * authors()
+---
 
-#### Authors:
-* Attributes:
-  * name (string)
-  * all (array)
-* Methods:
-  * contracts()
-  * books()
-  * sign_contracts(book,date,royalties)
-  * total_royalties()
+## 🧠 System Design
 
-#### Contracts:
-* Attributes:
-  * author (Author class), 
-  * book (Book class), 
-  * date (string), 
-  * royalties (integer)
-  * all (array)
-* Methods:
-  * contracts_by_date()
+### 📘 Classes and Responsibilities
 
-### Task 3: Develop, Test, and Refine the Code
+#### 1. Author
 
-#### Step 1: Create feature branch
+Represents a book author.
 
-#### Step 2: Create Book class
+**Attributes:**
 
-* `__init__`: title
-* Class attributes- all
-* Methods:
-  * contracts()- This method should return a list of related contracts
-  * authors()- This method should return a list of related authors using the Contract class as an intermediary
+* `name` (string)
+* `all` (class list storing all Author instances)
 
-#### Step 3: Authors
+**Methods:**
 
-* `__init__`: name (string)
-* Class attributes- all
-* Methods:
-  * contracts()- This method should return a list of related contracts
-  * books()- This method should return a list of related books using the Contract class as an intermediary
-  * sign_contracts(book,date,royalties)- This method should create and return a new Contract object between the author and the specified book with the specified date and royalties
-  * total_royalties()- This method should return the total amount of royalties that the author has earned from all of their contracts
+* `contracts()` → returns all contracts for the author
+* `books()` → returns all books associated with the author
+* `sign_contracts(book, date, royalties)` → creates a new contract
+* `total_royalties()` → calculates total earnings from contracts
 
-#### Step 4: Contracts
+---
 
-* `__init__`:
-  * author
-  * book
-  * date 
-  * royalties 
-* Class attributes: all
-* Properties: All properties should raise an exception if not valid
-  * author: Is an instance of Author class
-  * book:  Is an instance of Book class
-  * date: Is an instance of a str
-  * royalties:  Is an instance of an int
-* Class Methods: contracts_by_date()- This method should return all contracts that have the same date as the date passed into the method
+#### 2. Book
 
-#### Step 6: Push feature branch and open a PR on GitHub
+Represents a book.
 
-#### Step 7: Merge to main
+**Attributes:**
 
-### Task 4: Document and Maintain
+* `title` (string)
+* `all` (class list storing all Book instances)
 
-Best Practice documentation steps:
-* Add comments to the code to explain purpose and logic, clarifying intent and functionality of your code to other developers.
-* Update README text to reflect the functionality of the application following https://makeareadme.com. 
-  * Add screenshot of completed work included in Markdown in README.
-* Delete any stale branches on GitHub
-* Remove unnecessary/commented out code
-* If needed, update git ignore to remove sensitive data
+**Methods:**
 
-## Important Submission Note
+* `contracts()` → returns all contracts for the book
+* `authors()` → returns all authors associated with the book
 
-Before you submit your solution, you need to save your progress with git.
+---
 
-* Add your changes to the staging area by executing git add .
-* Create a commit by executing git commit -m "Your commit message"
-* Push your commits to GitHub by executing git push origin main
+#### 3. Contract
+
+Acts as the **join model** between Author and Book.
+
+**Attributes:**
+
+* `author` (Author instance)
+* `book` (Book instance)
+* `date` (string)
+* `royalties` (integer)
+* `all` (class list storing all Contract instances)
+
+**Methods:**
+
+* `contracts_by_date(date)` → returns all contracts for a specific date
+
+**Validations (via properties):**
+
+* `author` must be an Author instance
+* `book` must be a Book instance
+* `date` must be a string
+* `royalties` must be an integer
+
+---
+
+## 🔗 Relationship Structure
+
+```
+Author  ←→  Contract  ←→  Book
+```
+
+* One Author → many Contracts
+* One Book → many Contracts
+* Contracts link Authors and Books
+
+---
+
+## ⚙️ Installation & Setup
+
+1. Clone the repository:
+
+```bash
+git clone <your-repo-url>
+cd <repo-folder>
+```
+
+2. Open the project in your preferred IDE (VS Code recommended)
+
+3. Run the Python file:
+
+```bash
+python your_file_name.py
+```
+
+---
+
+## 🧪 Example Usage
+
+```python
+a1 = Author("Alice")
+a2 = Author("Bob")
+
+b1 = Book("Data Science")
+b2 = Book("Machine Learning")
+
+a1.sign_contracts(b1, "2026-03-20", 1000)
+a1.sign_contracts(b2, "2026-03-21", 500)
+a2.sign_contracts(b1, "2026-03-20", 700)
+
+print(a1.books())
+print(b1.authors())
+print(a1.total_royalties())
+print(Contract.contracts_by_date("2026-03-20"))
+```
+
